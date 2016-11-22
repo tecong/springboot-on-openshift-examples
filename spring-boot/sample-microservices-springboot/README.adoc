@@ -43,3 +43,6 @@ GET ALL: curl http://localhost:9091/
 GET ONE: curl http://localhost:9091/1
 DELETE ONE: curl -X DELETE http://localhost:9091/10
 ----
+
+== Run at openshift
+see https://blog.openshift.com/using-openshift-enterprise-grade-spring-boot-deployments/
