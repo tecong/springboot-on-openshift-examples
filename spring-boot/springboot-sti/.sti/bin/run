@@ -7,4 +7,10 @@
 #	https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
 #
 
-exec java -Djava.security.egd=file:/dev/./urandom -jar /opt/openshift/app.jar $APP_OPTIONS
+if [ $(ls /opt/openshift/app.jar | wc -l) -eq 1 ]; then
+    exec java -Djava.security.egd=file:/dev/./urandom -jar /opt/openshift/app.jar $APP_OPTIONS
+elif [ $(ls /opt/openshift/app.war | wc -l) -eq 1 ]; then
+    exec java -Djava.security.egd=file:/dev/./urandom -jar /opt/openshift/app.war $APP_OPTIONS
+else
+    echo "Could not launch application due to /opt/openshift/app.jar or app.war does not exist" && exit 1
+fi
