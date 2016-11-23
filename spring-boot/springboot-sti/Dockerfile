@@ -8,7 +8,7 @@ ENV GRADLE_VERSION 2.6
 ENV MAVEN_VERSION 3.3.9
 
 RUN yum install -y --enablerepo=centosplus \
-    tar unzip bc which lsof java-1.8.0-openjdk java-1.8.0-openjdk-devel wget && \
+    tar unzip bc which lsof java-1.8.0-openjdk java-1.8.0-openjdk-devel && \
     yum clean all -y && \
     (curl -0 http://www.eu.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | \
     tar -zx -C /usr/local) && \
@@ -23,9 +23,9 @@ RUN yum install -y --enablerepo=centosplus \
     yum -y install nodejs && \
     yum -y install freetype && \
     yum -y install fontconfig && \
-    wget -P /tmp https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2  && \
-    tar -jxf /tmp/phantomjs-2.1.1-linux-x86_64.tar.bz2 -C /tmp/ && \
-    cp /tmp/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin && \
+    (curl -sL -0  https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2 | \
+    tar -jx -C /usr/local) && \
+    ln -sf /usr/local/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin/phantomjs && \
     mkdir -p /opt/openshift && \
     mkdir -p /opt/app-root/source && chmod -R a+rwX /opt/app-root/source && \
     mkdir -p /opt/s2i/destination && chmod -R a+rwX /opt/s2i/destination && \
