@@ -19,6 +19,13 @@ RUN yum install -y --enablerepo=centosplus \
     rm /tmp/gradle-${GRADLE_VERSION}-bin.zip && \
     mv /usr/local/gradle-${GRADLE_VERSION} /usr/local/gradle && \
     ln -sf /usr/local/gradle/bin/gradle /usr/local/bin/gradle && \
+    curl --silent --location https://rpm.nodesource.com/setup_7.x | bash - && \
+    yum -y install nodejs && \
+    yum -y install freetype && \
+    yum -y install fontconfig && \
+    wget -P /tmp https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2  && \
+    tar -jxf /tmp/phantomjs-2.1.1-linux-x86_64.tar.bz2 -C /tmp/ && \
+    cp /tmp/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin && \
     mkdir -p /opt/openshift && \
     mkdir -p /opt/app-root/source && chmod -R a+rwX /opt/app-root/source && \
     mkdir -p /opt/s2i/destination && chmod -R a+rwX /opt/s2i/destination && \
