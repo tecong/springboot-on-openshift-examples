@@ -27,6 +27,7 @@ RUN yum install -y --enablerepo=centosplus \
     tar -jx -C /usr/local) && \
     ln -sf /usr/local/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin/phantomjs && \
     mkdir -p /opt/openshift && \
+    mkdir -p /opt/openshift/target/h2db/db && chmod -R a+rwX /opt/openshift/target && \
     mkdir -p /opt/app-root/source && chmod -R a+rwX /opt/app-root/source && \
     mkdir -p /opt/s2i/destination && chmod -R a+rwX /opt/s2i/destination && \
     mkdir -p /opt/app-root/src && chmod -R a+rwX /opt/app-root/src
