@@ -3,8 +3,8 @@
   <head>
     <title>Layout</title>
     <link rel="stylesheet"
-      th:href="@{/css/bootstrap.css}"
-      href="../../css/bootstrap.css"/>
+      th:href="@{/css/bootstrap.min.css}"
+      href="../../css/bootstrap.min.css"/>
   </head>
   <body>
     <div class="container">
@@ -28,5 +28,8 @@
         Fake content
       </div>
     </div>
+    <footer>
+       <p layout:fragment="custom-footer">This is some footer content from the content page</p>
+    </footer>
   </body>
 </html>
