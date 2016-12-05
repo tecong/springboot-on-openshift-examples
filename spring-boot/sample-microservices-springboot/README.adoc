@@ -45,4 +45,63 @@ DELETE ONE: curl -X DELETE http://localhost:9091/10
 ----
 
 == Run at openshift
-see https://blog.openshift.com/using-openshift-enterprise-grade-spring-boot-deployments/
+see also https://blog.openshift.com/using-openshift-enterprise-grade-spring-boot-deployments/
+ 
+Create applications and simulate running at dev and test versions from different tags
+
+TODO: create project springboot-sti an create build from springboot-sti-build.yaml
+
+Create project and allow access to project where springboot builder image resides:
+---
+oc new-project microservices-demo-springboot
+oc policy add-role-to-group \
+system:image-puller system:serviceaccounts:microservices-demo-springboot \
+--namespace=springboot-sti
+
+oc policy add-role-to-user admin "CN=Pasi Kilponen,OU=Users,OU=IBM Cloud,DC=tieto,DC=softlayer,DC=local" -n microservices-demo-springboot
+---
+
+Create repository container, APP_OPTIONS is passed to java run command. 
+
+oc new-app springboot-sti/springboot-sti~https://github.com/tecong/springboot-on-openshift-examples.git \
+--context-dir=spring-boot/sample-microservices-springboot/repositories-mem \
+--name=repository-mem \
+-e APP_OPTIONS="--server.port=8080"
+
+oc new-app springboot-sti/springboot-sti~https://github.com/tecong/springboot-on-openshift-examples.git \
+--context-dir=spring-boot/sample-microservices-springboot/web --name=web \
+-e APP_OPTIONS="--remoteHost=repository-mem --remotePort=8080 --server.port=8080"
+
+Test endpoints
+oc get svc <<< see clusterip
+curl -L -v http://172.30.70.130:8080 <<< (:9090 repository-mem)
+
+Add enviroment variables repositoryHost and repositoryPort at web
+
+Add test application pipeline
+
+Promote application to test
+oc tag repository-mem:latest repository-mem:test
+oc tag web:latest web:test
+
+oc new-app repository-mem:test \
+--name=repository-mem-test \
+-e APP_OPTIONS="--server.port=8080"
+
+oc new-app web:test \
+--name=web-test \
+-e APP_OPTIONS="--remoteHost=repository-mem-test --remotePort=8080 --server.port=8080"
+
+Add prod application pipeline
+
+Promote application to production
+oc tag repository-mem:test repository-mem:prod
+oc tag web:test web:prod
+
+oc new-app repository-mem:prod \
+--name=repository-mem-prod \
+-e APP_OPTIONS="--server.port=8080"
+
+oc new-app web:prod \
+--name=web-test \
+-e APP_OPTIONS="--remoteHost=repository-mem-prod --remotePort=8080 --server.port=8080"
