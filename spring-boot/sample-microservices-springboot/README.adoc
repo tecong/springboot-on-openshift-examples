@@ -46,10 +46,15 @@ DELETE ONE: curl -X DELETE http://localhost:9091/10
 
 == Run at openshift
 see also https://blog.openshift.com/using-openshift-enterprise-grade-spring-boot-deployments/
- 
-Create applications and simulate running at dev and test versions from different tags
 
-TODO: create project springboot-sti an create build from springboot-sti-build.yaml
+=== Prequisite
+Create springboot-sti project as instructed in this same github repository (see https://github.com/tecong/springboot-on-openshift-examples/tree/master/spring-boot/springboot-sti)
+
+=== Info
+Following steps creates application build and deployment pipeline dev,test,prod. Build is embedded at openshift side and it utilizes source to image technology (s2i). Application consists of two containers, one running UI and other running backend repository service with embedded database (HSQL). Application is built with spring boot framework and maven.
+
+=== Steps to create openshift pipeline
+Create applications and simulate running at dev and test versions from different tags
 
 Create project and allow access to project where springboot builder image resides:
 
@@ -81,11 +86,9 @@ oc get svc <<< see clusterip
 curl -L -v http://172.30.70.130:8080 <<< (:9090 repository-mem)
 ----
 
-Add enviroment variables repositoryHost and repositoryPort at web
+At this point group application components together in OpenShift console by selecting first web pod and then clicking group service at selected pod. That will show hole application as one group in console making it more easy to see how the pipeline is build; you will then have group per deployment e.g. dev, test, prod.
 
-Add test application pipeline
-
-Promote application to test
+Next step is to tag images at repository with test tag and create associated application delpoyments for test. Note the difference at oc new-app command which in this time directly asks to deploy from given image and tag (e.g. web:test).
 
 ----
 oc tag repository-mem:latest repository-mem:test
@@ -100,7 +103,7 @@ oc new-app web:test \
 -e APP_OPTIONS="--remoteHost=repository-mem-test --remotePort=8080 --server.port=8080"
 ----
 
-Add prod application pipeline
+Add prod application pipeline is similar to test environment creation:
 
 Promote application to production
 
