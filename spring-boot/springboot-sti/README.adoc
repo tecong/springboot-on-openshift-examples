@@ -38,6 +38,7 @@ oc create -f https://raw.githubusercontent.com/tecong/springboot-on-openshift-ex
 
 ** Instant app already provided as template
 ** Using the springboot-sti builder image using a regular Git repository
+** Create app from template using cli: oc process springboot-helloworld-maven | oc create -f -
 
 == Samples
 There is a lot of example SpringBoot applications https://github.com/spring-projects/spring-boot/tree/master/spring-boot-samples[here]
